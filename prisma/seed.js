@@ -1,6 +1,6 @@
-import { users } from './seedData/users'
-import { groups } from './seedData/groups'
-import { categories } from './seedData/categories'
+import { users } from './seedData/users.js'
+import { groups } from './seedData/groups.js'
+import { categories } from './seedData/categories.js'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
@@ -22,3 +22,4 @@ const main = async () => {
     }
 
 }
+main()
