@@ -8,19 +8,22 @@ datasource db {
 }
 
 model Users {
-  id        Int             @id @default(autoincrement())
-  email     String          @unique
+  id        String   @id @default(uuid())
+  email     String   @unique
   name      String
+  surname   String
+  age       Int?
   password  String
   image     String?
   groups    Groups[]
-  role      String          @default("user")
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
+  role      String   @default("user")
+  token     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Categories {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   name        String   @unique
   description String
   image       String?
@@ -30,14 +33,13 @@ model Categories {
 }
 
 model Groups {
-  id          Int             @id @default(autoincrement())
-  name        String          @unique
+  id          String     @id @default(uuid())
+  name        String     @unique
   description String
   image       String?
-  category    Categories      @relation(fields: [categoryId], references: [id])
-  categoryId  Int
+  category    Categories @relation(fields: [categoryId], references: [id])
+  categoryId  String     @default(uuid())
   users       Users[]
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
-
