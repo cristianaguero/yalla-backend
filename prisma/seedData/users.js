@@ -2,32 +2,38 @@
 const users = [
     {
         name: "Juan",
+        surname: "García",
         email: "juan@example.com",
         password: "password123",
-        role: "ADMIN"
+        role: "admin"
     },
     {
         name: "María",
+        surname: "González",
         email: "maria@example.com",
         password: "password456",
-        role: "USER"
+        role: "user"
     },
     {
         name: "Pedro",
+        surname: "Gómez",
         email: "pedro@example.com",
         password: "password789",
-        role: "USER"
+        role: "user"
     },
     {
         name: "Laura",
+        surname: "Rodríguez",
         email: "laura@example.com",
-        password: "passwordabc"
+        password: "passwordabc",
+        role: "user"
     },
     {
         name: "Carlos",
+        surname: "Fernández",
         email: "carlos@example.com",
         password: "passwordxyz",
-        role: "USER"
+        role: "user"
     }
 ];
 
