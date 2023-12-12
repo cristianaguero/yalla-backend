@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  password    String
+  name        String
+  surname     String?
+  phone       String?
+  address      String?
+  city        String?
+  languages   String[]
+  description String?
+  age         Int?
+  skills      String[]
+  image       String?
+  groups      Groups[]
+  events      Events[]
+  role        String   @default("user")
+  token       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Categories {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String
+  image       String?
+  groups      Groups[]
+  events      Events[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Groups {
+  id          String     @id @default(uuid())
+  name        String     @unique
+  description String
+  image       String?
+  category    Categories @relation(fields: [categoryId], references: [id])
+  categoryId  String     @default(uuid())
+  users       Users[]
+  events      Events[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Events {
+  id          String     @id @default(uuid())
+  name        String     @unique
+  description String
+  date        DateTime
+  location    String
+  type        String
+  capacity    Int?
+  languages    String[]
+  image       String?
+  group       Groups     @relation(fields: [groupId], references: [id])
+  groupId     String     @default(uuid())
+  users       Users[]
+  category    Categories @relation(fields: [categoryId], references: [id])
+  categoryId  String     @default(uuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
