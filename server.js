@@ -3,13 +3,14 @@ console.log('starting server building...')
 import express from 'express';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRotues.js';
+import categoriesRoutes from './routes/categoriesRoutes.js';
+import groupsRoutes from './routes/groupsRoutes.js';
 import cors from 'cors';
 
 const app = express();
 app.use(express.json());
 
 dotenv.config();
-
 
 const allowedOrigins = [process.env.FRONTEND_URL]
 // const corsOptions = {
@@ -26,9 +27,9 @@ const corsOptions = {
 }
 app.use(cors(corsOptions));
 
-
 app.use('/api/users', userRoutes);
-
+app.use('/api/categories', categoriesRoutes);
+app.use('/api/groups', groupsRoutes);
 
 const PORT = process.env.PORT || 3000;
 
