@@ -37,6 +37,4 @@ const groups = [
     },
 ];
 
-export {
-    groups
-}
+export default groups;

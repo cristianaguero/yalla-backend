@@ -1,6 +1,7 @@
-import { PrismaClient } from '@prisma/client';
-import jwtGenerator from '../helpers/jwtGenerator.js';
-import idGenerator from '../helpers/idGenerator.js';
+import pkg from '@prisma/client';
+const { PrismaClient } = pkg;
+import jwtGenerator from '../utils/jwtGenerator.js';
+import idGenerator from '../utils/idGenerator.js';
 
 const prisma = new PrismaClient();
 
@@ -10,7 +11,7 @@ const getAllUsers = async (req, res) => {
 }
 
 const createUser = async (req, res) => {
-    const { email, password, name, address, city, languages, skills } = req.body;
+    const { email } = req.body;
     const userExists = await prisma.users.findUnique({
         where: {
             email

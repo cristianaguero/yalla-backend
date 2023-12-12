@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { PrismaClient } from '@prisma/client';
+import pkg from '@prisma/client';
+const { PrismaClient } = pkg;
 
 const prisma = new PrismaClient();
 
@@ -13,8 +14,6 @@ const checkAuth = async (req, res, next) => {
             token = req.headers.authorization.split(' ')[1];
 
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-            console.log(decoded);
 
             req.user = await prisma.users.findUnique({
                 where: {
@@ -37,4 +36,4 @@ const checkAuth = async (req, res, next) => {
 
 }
 
-export default checkAuth;
+export default checkAuth

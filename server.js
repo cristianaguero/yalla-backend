@@ -2,10 +2,12 @@ console.log('starting server building...')
 
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
+
 import userRoutes from './routes/userRotues.js';
 import categoriesRoutes from './routes/categoriesRoutes.js';
 import groupsRoutes from './routes/groupsRoutes.js';
-import cors from 'cors';
+
 
 const app = express();
 app.use(express.json());

@@ -1,18 +1,11 @@
-import express from 'express';
-import checkAuth from '../middlewares/authMiddleware.js'
+import { Router } from 'express';
+import checkAuth from '../middlewares/authMiddleware.js';
 
-import { 
-    authenticateUser,
-    createUser,
-    updateProfile,
-    profile,
-    deleteUser,
-    getAllUsers
-} from '../controllers/userController.js';
+import { authenticateUser, createUser, updateProfile, profile, deleteUser, getAllUsers } from '../controllers/userController.js';
 
 
 
-const router = express.Router();
+const router = Router();
 
 router.get('/login', authenticateUser);
 router.post('/register', createUser);
