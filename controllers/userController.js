@@ -2,6 +2,8 @@ import pkg from '@prisma/client';
 const { PrismaClient } = pkg;
 import jwtGenerator from '../utils/jwtGenerator.js';
 import idGenerator from '../utils/idGenerator.js';
+import bcrypt from 'bcrypt';
+import { comparePassword } from '../services/userService.js';
 
 const prisma = new PrismaClient();
 
@@ -21,11 +23,15 @@ const createUser = async (req, res) => {
     if (userExists) {
         res.status(400).json({ error: 'User already exists' });
     } else {
+
+        const salt = await bcrypt.genSalt(10);
+
         try {
             const newUser = await prisma.users.create({
                 data: {
                     ...req.body,
-                    token: idGenerator()
+                    token: idGenerator(),
+                    password: await bcrypt.hash(req.body.password, salt)
                 }
             });
             res.json({ message: 'User created successfully', newUser });
@@ -53,16 +59,24 @@ const authenticateUser = async (req, res) => {
         res.status(400).json({ error: 'The credentials are not correct' });
     }
 
-    if (user.password === password) {
-        res.json({
-            id: user.id,
-            name: user.name,
-            surname: user.surname,
-            role: user.role,
-            token: jwtGenerator(user.id)
-        });
-    } else {
-        res.status(400).json({ error: 'The credentials are not correct' });
+    
+        const passwordDecoded = await comparePassword(user.password, password)
+
+    try {
+        if (!passwordDecoded) {
+            res.status(400).json({ error: 'The credentials are not correct' });
+        } else {
+            res.json({
+                id: user.id,
+                name: user.name,
+                surname: user.surname,
+                role: user.role,
+                token: jwtGenerator(user.id)
+            });
+        }
+    } catch (error) {
+        res.status(400).json({ error: 'The credentials are not correct' })
+        console.log(error);
     }
 }
 
