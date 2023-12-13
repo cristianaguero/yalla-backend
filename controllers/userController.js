@@ -2,12 +2,19 @@ import pkg from '@prisma/client';
 const { PrismaClient } = pkg;
 import jwtGenerator from '../utils/jwtGenerator.js';
 import idGenerator from '../utils/idGenerator.js';
+import bcrypt from 'bcrypt';
+import { comparePassword } from '../services/userService.js';
 
 const prisma = new PrismaClient();
 
 const getAllUsers = async (req, res) => {
-    const users = await prisma.users.findMany();
-    res.json(users);
+    
+    try {
+        const users = await prisma.users.findMany();
+        res.json(users);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 }
 
 const createUser = async (req, res) => {
@@ -21,11 +28,15 @@ const createUser = async (req, res) => {
     if (userExists) {
         res.status(400).json({ error: 'User already exists' });
     } else {
+
+        const salt = await bcrypt.genSalt(10);
+
         try {
             const newUser = await prisma.users.create({
                 data: {
                     ...req.body,
-                    token: idGenerator()
+                    token: idGenerator(),
+                    password: await bcrypt.hash(req.body.password, salt)
                 }
             });
             res.json({ message: 'User created successfully', newUser });
@@ -53,16 +64,24 @@ const authenticateUser = async (req, res) => {
         res.status(400).json({ error: 'The credentials are not correct' });
     }
 
-    if (user.password === password) {
-        res.json({
-            id: user.id,
-            name: user.name,
-            surname: user.surname,
-            role: user.role,
-            token: jwtGenerator(user.id)
-        });
-    } else {
-        res.status(400).json({ error: 'The credentials are not correct' });
+    
+        const passwordDecoded = await comparePassword(user.password, password)
+
+    try {
+        if (!passwordDecoded) {
+            res.status(400).json({ error: 'The credentials are not correct' });
+        } else {
+            res.json({
+                id: user.id,
+                name: user.name,
+                surname: user.surname,
+                role: user.role,
+                token: jwtGenerator(user.id)
+            });
+        }
+    } catch (error) {
+        res.status(400).json({ error: 'The credentials are not correct' })
+        console.log(error);
     }
 }
 
@@ -78,18 +97,37 @@ const profile = async (req, res) => {
 }
 
 const updateProfile = async (req, res) => {
-    const { id, name, surname, age, password, image } = req.body;
+    const { id, name, surname, age, image, address, phone, city, languages, description, skills } = req.body;
+
+    const user = await prisma.users.findUnique({
+        where: {
+            id
+        }
+    });
+
+    try {
+
+        user.name = name || user.name;
+        user.surname = surname || user.surname;
+        user.age = age || user.age;
+        user.image = image || user.image;
+        user.address = address || user.address;
+        user.phone = phone || user.phone;
+        user.city = city || user.city;
+        user.languages = languages || user.languages;
+        user.description = description || user.description;
+        user.skills = skills || user.skills;
+
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 
     const updatedUser = await prisma.users.update({
         where: {
             id
         },
         data: {
-            name,
-            surname,
-            age,
-            password,
-            image
+            ...user
         }
     });
 
@@ -99,13 +137,16 @@ const updateProfile = async (req, res) => {
 const deleteUser = async (req, res) => {
     const { id } = req.body;
 
-    const deletedUser = await prisma.users.delete({
-        where: {
-            id
-        }
-    });
-
-    res.json(deletedUser);
+    try {
+        const deletedUser = await prisma.users.delete({
+            where: {
+                id
+            }
+        });
+        res.json({ message: 'User deleted successfully', deletedUser });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 }
 
 export {
