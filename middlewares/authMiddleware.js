@@ -7,9 +7,9 @@ const prisma = new PrismaClient();
 const checkAuth = async (req, res, next) => {
     let token;
 
+    try {
 
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-        try {
+        if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
 
             token = req.headers.authorization.split(' ')[1];
 
@@ -23,13 +23,13 @@ const checkAuth = async (req, res, next) => {
 
             return next();
 
-        } catch (error) {
-            res.status(401).json({ error: 'Not authorized, token failed' });
-        }
-    }
 
-    if (!token) {
-        res.status(401).json({ error: 'Not authorized, no token' });
+        } else {
+            return res.status(401).json({ error: 'Not authorized' });
+        }
+
+    } catch (error) {
+        return res.status(401).json({ error: 'Not authorized' });
     }
 
     next();
