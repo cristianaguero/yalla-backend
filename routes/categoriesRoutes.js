@@ -1,4 +1,5 @@
 import { Router } from "express";
+import checkAuth from "../middlewares/authMiddleware.js";
 import {
     getAllCategories,
     createCategory,
@@ -9,10 +10,10 @@ import {
 
 const router = Router();
 
-router.post("/", createCategory);
-router.put("/:id", updateCategory);
-router.delete("/:id", deleteCategory);
+router.post("/", checkAuth, createCategory);
+router.put("/:id", checkAuth, updateCategory);
+router.delete("/:id", checkAuth, deleteCategory);
 
-router.get("/", getAllCategories);
+router.get("/", checkAuth, getAllCategories);
 
 export default router;
