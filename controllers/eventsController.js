@@ -5,8 +5,6 @@ const prisma = new PrismaClient();
 
 const createEvent = async (req, res) => {
 
-    console.log(req.body);
-
     const { name, description, date, location, type, capacity, languages, image, categoryId } = req.body;
 
     
