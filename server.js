@@ -6,7 +6,7 @@ import cors from 'cors';
 
 import userRoutes from './routes/userRotues.js';
 import categoriesRoutes from './routes/categoriesRoutes.js';
-import groupsRoutes from './routes/groupsRoutes.js';
+import eventsRoutes from './routes/eventsRoutes.js';
 
 
 const app = express();
@@ -31,7 +31,7 @@ app.use(cors(corsOptions));
 
 app.use('/api/users', userRoutes);
 app.use('/api/categories', categoriesRoutes);
-app.use('/api/groups', groupsRoutes);
+app.use('/api/events', eventsRoutes);
 
 const PORT = process.env.PORT || 3000;
 
