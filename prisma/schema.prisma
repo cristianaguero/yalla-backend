@@ -21,7 +21,6 @@ model Users {
   age         Int?
   skills      String[]
   image       String?
-  groups      Groups[]
   events      Events[]
   role        String   @default("user")
   token       String?
@@ -34,25 +33,10 @@ model Categories {
   name        String   @unique
   description String
   image       String?
-  groups      Groups[]
   events      Events[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
-
-model Groups {
-  id          String     @id @default(uuid())
-  name        String     @unique
-  description String
-  image       String?
-  category    Categories @relation(fields: [categoryId], references: [id])
-  categoryId  String     @default(uuid())
-  users       Users[]
-  events      Events[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-}
-
 model Events {
   id          String     @id @default(uuid())
   name        String     @unique
@@ -63,11 +47,9 @@ model Events {
   capacity    Int?
   languages    String[]
   image       String?
-  group       Groups     @relation(fields: [groupId], references: [id])
-  groupId     String     @default(uuid())
   users       Users[]
   category    Categories @relation(fields: [categoryId], references: [id])
-  categoryId  String     @default(uuid())
+  categoryId  String     
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
