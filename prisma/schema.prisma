@@ -44,7 +44,7 @@ model Events {
   startDate   DateTime
   endDate     DateTime
   location    String
-  type        String
+  address     String
   capacity    Int?
   languages   String[]
   imageUrl    String?

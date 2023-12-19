@@ -6,7 +6,7 @@ import { createEvent, getAllEvents, getEventById, searchEvents, updateEvent, del
 const router = Router();
 
 router.post('/create', checkAuth, createEvent);
-router.get('/', checkAuth, getAllEvents);
+router.get('/', getAllEvents);
 router.get('/search', searchEvents);
 router.get('/:id', getEventById);
 router.put('/:id', checkAuth, updateEvent);

@@ -1,4 +1,4 @@
-const users = [
+export const users = [
     {
         name: "Juan García",
         email: "juan@example.com",
@@ -30,5 +30,3 @@ const users = [
         role: "user"
     }
 ];
-
-export default users;

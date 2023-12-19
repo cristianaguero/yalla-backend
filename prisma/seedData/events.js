@@ -1,4 +1,4 @@
-const events = [
+export const events = [
     {
         category: "Agricultural and Food Security",
         location: "Ashkelon, Israel",
@@ -95,6 +95,4 @@ const events = [
         description: "Volunteer at the hospital to support healthcare professionals and bring comfort to patients.",
         languages: ["English", "Hebrew"],
     },
-]
-
-export default events;
+];

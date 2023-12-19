@@ -6,7 +6,7 @@ CREATE TABLE "Events" (
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3) NOT NULL,
     "location" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
     "capacity" INTEGER,
     "languages" TEXT[],
     "imageUrl" TEXT,

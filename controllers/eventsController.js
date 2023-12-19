@@ -57,28 +57,30 @@ const searchEvents = async (req, res) => {
 
     try {
         let events;
+        const where = {};
 
         if(category) {
-            events = await prisma.events.findMany({
-                where: { category},
-            });
-        } else if(date) {
-            events = await prisma.events.findMany({
-                where: {
-                    date: {
-                        gte: new Date(startDate),
-                        lte: new Date(endDate),
-                    },
-                },
-            });
-        } else if(location) {
-            events = await prisma.events.findMany({
-                where: {location: {contains: location}},
-            });
-        } else {
-            events = await prisma.events.findMany();
-        }
-
+            where.category = category
+        };
+        
+        if(startDate && endDate) {
+            where.startDate = {
+                gte: new Date(startDate),
+            };
+            where.endDate = {
+                lte: new Date(endDate),
+            };
+        };
+        
+        if(location) {
+            where.location = {
+                contains: location,
+            };
+        };
+        console.log('where:', where);
+        events = await prisma.events.findMany({
+            where,
+        });
         res.json(events);
     } catch(error) {
         res.status(400).json({error: error.message});
