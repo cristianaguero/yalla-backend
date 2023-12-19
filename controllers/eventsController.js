@@ -6,7 +6,6 @@ const prisma = new PrismaClient();
 const createEvent = async (req, res) => {
 
     const { name, description, startDate, endDate, location, type, capacity, languages, image, categoryId } = req.body;
-
     
     try {
         const newEvent = await prisma.events.create({
@@ -118,8 +117,7 @@ const updateEvent = async (req, res) => {
             });
             res.json({ message: 'Event updated successfully', event });
         }
-
-        
+      
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
