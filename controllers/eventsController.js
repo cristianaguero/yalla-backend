@@ -5,13 +5,13 @@ const prisma = new PrismaClient();
 
 const createEvent = async (req, res) => {
 
-    const { name, description, startDate, endDate, location, type, capacity, languages, image, categoryId } = req.body;
+    const { title, description, startDate, endDate, location, type, capacity, languages, imageUrl, categoryId } = req.body;
 
     
     try {
         const newEvent = await prisma.events.create({
             data: {
-                name,
+                title,
                 description,
                 startDate,
                 endDate,
@@ -19,7 +19,7 @@ const createEvent = async (req, res) => {
                 type,
                 capacity,
                 languages,
-                image,
+                imageUrl,
                 categoryId,
             }
         });
@@ -87,7 +87,7 @@ const searchEvents = async (req, res) => {
 
 const updateEvent = async (req, res) => {
     const { id } = req.params;
-    const { name, description, startDate, endDate, location, type, capacity, languages, image, category } = req.body;
+    const { title, description, startDate, endDate, location, type, capacity, languages, imageUrl, category } = req.body;
     try {
 
         const event = await prisma.events.findUnique({
@@ -104,7 +104,7 @@ const updateEvent = async (req, res) => {
                     id
                 },
                 data: {
-                    name,
+                    title,
                     description,
                     startDate,
                     endDate,
@@ -112,7 +112,7 @@ const updateEvent = async (req, res) => {
                     type,
                     capacity,
                     languages,
-                    image,
+                    imageUrl,
                     category,
                 }
             });

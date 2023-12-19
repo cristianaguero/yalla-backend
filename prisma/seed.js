@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { categories, users } from './seedData'
+import { categories, users, events } from './seedData'
 
 const prisma = new PrismaClient()
 
@@ -11,6 +11,9 @@ const main = async () => {
         })
         await prisma.users.createMany({
             data: users
+        })
+        await prisma.events.createMany({
+            data: events
         })
     } catch (error) {
         console.error(error)
