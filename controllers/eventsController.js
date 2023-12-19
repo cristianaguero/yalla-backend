@@ -5,15 +5,15 @@ const prisma = new PrismaClient();
 
 const createEvent = async (req, res) => {
 
-    const { name, description, date, location, type, capacity, languages, image, categoryId } = req.body;
-
+    const { name, description, startDate, endDate, location, type, capacity, languages, image, categoryId } = req.body;
     
     try {
         const newEvent = await prisma.events.create({
             data: {
                 name,
                 description,
-                date,
+                startDate,
+                endDate,
                 location,
                 type,
                 capacity,
@@ -51,11 +51,42 @@ const getEventById = async (req, res) => {
     }
 }
 
+const searchEvents = async (req, res) => {
+    const {category, startDate, endDate, location } = req.query;
 
+    try {
+        let events;
+
+        if(category) {
+            events = await prisma.events.findMany({
+                where: { category},
+            });
+        } else if(date) {
+            events = await prisma.events.findMany({
+                where: {
+                    date: {
+                        gte: new Date(startDate),
+                        lte: new Date(endDate),
+                    },
+                },
+            });
+        } else if(location) {
+            events = await prisma.events.findMany({
+                where: {location: {contains: location}},
+            });
+        } else {
+            events = await prisma.events.findMany();
+        }
+
+        res.json(events);
+    } catch(error) {
+        res.status(400).json({error: error.message});
+    }
+}
 
 const updateEvent = async (req, res) => {
     const { id } = req.params;
-    const { name, description, date, location, type, capacity, languages, image, category } = req.body;
+    const { name, description, startDate, endDate, location, type, capacity, languages, image, category } = req.body;
     try {
 
         const event = await prisma.events.findUnique({
@@ -74,20 +105,19 @@ const updateEvent = async (req, res) => {
                 data: {
                     name,
                     description,
-                    date,
+                    startDate,
+                    endDate,
                     location,
                     type,
                     capacity,
                     languages,
                     image,
                     category,
-    
                 }
             });
             res.json({ message: 'Event updated successfully', event });
         }
-
-        
+      
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -123,6 +153,7 @@ const deleteEvent = async (req, res) => {
 export {
     getAllEvents,
     getEventById,
+    searchEvents,
     createEvent,
     updateEvent,
     deleteEvent

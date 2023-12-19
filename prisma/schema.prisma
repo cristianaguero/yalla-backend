@@ -41,11 +41,12 @@ model Events {
   id          String     @id @default(uuid())
   name        String     @unique
   description String
-  date        DateTime
+  startDate   DateTime
+  endDate     DateTime
   location    String
   type        String
   capacity    Int?
-  languages    String[]
+  languages   String[]
   image       String?
   users       Users[]
   category    Categories @relation(fields: [categoryId], references: [id])
