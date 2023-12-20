@@ -1,37 +1,30 @@
 console.log('starting server building...')
 
-import express from 'express';
-import dotenv from 'dotenv';
-import cors from 'cors';
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
 
-import userRoutes from './routes/userRotues.js';
-import categoriesRoutes from './routes/categoriesRoutes.js';
-import eventsRoutes from './routes/eventsRoutes.js';
-
+import userRoutes from "./routes/userRoutes.js";
+import categoriesRoutes from "./routes/categoriesRoutes.js";
+import eventsRoutes from "./routes/eventsRoutes.js";
 
 const app = express();
-app.use(express.json());
 
 dotenv.config();
 
-const allowedOrigins = [process.env.FRONTEND_URL]
-// const corsOptions = {
-//     origin: function (origin, callback) {
-//         if (allowedOrigins.includes(origin)) {
-//             callback(null, true);
-//         } else {
-//             callback(new Error('Not allowed by CORS - from server.js'));
-//         }
-//     }
-// }
 const corsOptions = {
-    origin: allowedOrigins
+    origin: "http://localhost:3000",
+    methods: "GET, HEAD, POST, PUT, DELETE",
+    credentials: true,
+    optionsSuccessStatus: 204,
 }
-app.use(cors(corsOptions));
 
-app.use('/api/users', userRoutes);
-app.use('/api/categories', categoriesRoutes);
-app.use('/api/events', eventsRoutes);
+app.use(cors(corsOptions));
+app.use(express.json());
+
+app.use("/api/users", userRoutes);
+app.use("/api/categories", categoriesRoutes);
+app.use("/api/events", eventsRoutes);
 
 const PORT = process.env.PORT || 3000;
 
