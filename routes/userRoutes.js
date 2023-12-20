@@ -3,8 +3,6 @@ import checkAuth from "../middlewares/authMiddleware.js";
 
 import { authenticateUser, createUser, updateProfile, profile, deleteUser, getAllUsers } from "../controllers/userController.js";
 
-
-
 const router = Router();
 
 router.get("/", checkAuth, getAllUsers);
