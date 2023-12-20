@@ -97,7 +97,7 @@ const profile = async (req, res) => {
 }
 
 const updateProfile = async (req, res) => {
-    const { id, name, surname, age, image, address, phone, city, languages, description, skills } = req.body;
+    const { id, name, age, image, address, phone, city, languages, description, skills } = req.body;
 
     const user = await prisma.users.findUnique({
         where: {
@@ -108,7 +108,6 @@ const updateProfile = async (req, res) => {
     try {
 
         user.name = name || user.name;
-        user.surname = surname || user.surname;
         user.age = age || user.age;
         user.image = image || user.image;
         user.address = address || user.address;

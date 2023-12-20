@@ -1,5 +1,4 @@
-
-const categories = [
+export const categories = [
     {
         label: "Community Service",
         icon: "FaHandsHelping",
@@ -91,6 +90,3 @@ const categories = [
             "Respond to emergencies, aid in disaster recovery, and assist in crisis situations.",
     }
 ];
-
-export default categories;
-

@@ -12,12 +12,11 @@ model Users {
   email       String   @unique
   password    String
   name        String
-  surname     String?
   phone       String?
-  address      String?
+  address     String?
   city        String?
   languages   String[]
-  description String?
+  bio         String?
   age         Int?
   skills      String[]
   image       String?
@@ -30,24 +29,25 @@ model Users {
 
 model Categories {
   id          String   @id @default(uuid())
-  name        String   @unique
+  label       String   @unique
   description String
-  image       String?
+  icon        String?
   events      Events[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
 model Events {
   id          String     @id @default(uuid())
-  name        String     @unique
+  title       String     @unique
   description String
   startDate   DateTime
   endDate     DateTime
   location    String
-  type        String
+  address     String
   capacity    Int?
   languages   String[]
-  image       String?
+  imageUrl    String?
   users       Users[]
   category    Categories @relation(fields: [categoryId], references: [id])
   categoryId  String     

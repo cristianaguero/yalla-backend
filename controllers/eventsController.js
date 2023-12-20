@@ -5,23 +5,34 @@ const prisma = new PrismaClient();
 
 const createEvent = async (req, res) => {
 
-    const { name, description, startDate, endDate, location, type, capacity, languages, image, categoryId } = req.body;
+    const { title, description, startDate, endDate, location, address, capacity, languages, imageUrl, category } = req.body;
+    const foundCategory = await prisma.categories.findUnique({
+        where: {
+            label: category.label,
+        },
+    });
+    console.log('Found category:', foundCategory);
+
+    if (!foundCategory) {
+        return res.status(404).json({ error: 'Category not found' });
+    }
     
     try {
         const newEvent = await prisma.events.create({
             data: {
-                name,
+                title,
                 description,
                 startDate,
                 endDate,
                 location,
-                type,
+                address,
                 capacity,
                 languages,
-                image,
-                categoryId,
+                imageUrl,
+                categoryId: foundCategory.id,
             }
         });
+        console.log(req.body);
         res.json({ message: 'Event created successfully', newEvent });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -56,26 +67,37 @@ const searchEvents = async (req, res) => {
 
     try {
         let events;
+        const where = {};
 
-        if(category) {
-            events = await prisma.events.findMany({
-                where: { category},
-            });
-        } else if(date) {
-            events = await prisma.events.findMany({
-                where: {
-                    date: {
-                        gte: new Date(startDate),
-                        lte: new Date(endDate),
-                    },
+        if (category) {
+            where.category = {
+                label: {
+                    equals: category,
                 },
-            });
-        } else if(location) {
-            events = await prisma.events.findMany({
-                where: {location: {contains: location}},
-            });
-        } else {
-            events = await prisma.events.findMany();
+            };
+        }
+        
+        if(startDate && endDate) {
+            where.startDate = {
+                gte: new Date(startDate),
+            };
+            where.endDate = {
+                lte: new Date(endDate),
+            };
+        };
+        
+        if(location) {
+            where.location = {
+                contains: location,
+            };
+        };
+
+        events = await prisma.events.findMany({
+            where,
+        });
+
+        if (events.length === 0) {
+            return res.status(404).json({ error: 'No events match the specified criteria.' });
         }
 
         res.json(events);
@@ -86,7 +108,7 @@ const searchEvents = async (req, res) => {
 
 const updateEvent = async (req, res) => {
     const { id } = req.params;
-    const { name, description, startDate, endDate, location, type, capacity, languages, image, category } = req.body;
+    const { title, description, startDate, endDate, location, type, capacity, languages, imageUrl, category } = req.body;
     try {
 
         const event = await prisma.events.findUnique({
@@ -103,7 +125,7 @@ const updateEvent = async (req, res) => {
                     id
                 },
                 data: {
-                    name,
+                    title,
                     description,
                     startDate,
                     endDate,
@@ -111,7 +133,7 @@ const updateEvent = async (req, res) => {
                     type,
                     capacity,
                     languages,
-                    image,
+                    imageUrl,
                     category,
                 }
             });

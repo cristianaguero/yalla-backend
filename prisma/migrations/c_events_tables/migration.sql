@@ -1,23 +1,15 @@
--- AlterTable
-ALTER TABLE "Users" ADD COLUMN     "address" TEXT,
-ADD COLUMN     "city" TEXT,
-ADD COLUMN     "description" TEXT,
-ADD COLUMN     "languages" TEXT[],
-ADD COLUMN     "phone" TEXT,
-ADD COLUMN     "skills" TEXT[];
-
 -- CreateTable
 CREATE TABLE "Events" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "date" TIMESTAMP(3) NOT NULL,
+    "startDate" TIMESTAMP(3) NOT NULL,
+    "endDate" TIMESTAMP(3) NOT NULL,
     "location" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
     "capacity" INTEGER,
     "languages" TEXT[],
-    "image" TEXT,
-    "groupId" TEXT NOT NULL,
+    "imageUrl" TEXT,
     "categoryId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -32,16 +24,13 @@ CREATE TABLE "_EventsToUsers" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Events_name_key" ON "Events"("name");
+CREATE UNIQUE INDEX "Events_title_key" ON "Events"("title");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_EventsToUsers_AB_unique" ON "_EventsToUsers"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_EventsToUsers_B_index" ON "_EventsToUsers"("B");
-
--- AddForeignKey
-ALTER TABLE "Events" ADD CONSTRAINT "Events_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "Groups"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Events" ADD CONSTRAINT "Events_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Categories"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
