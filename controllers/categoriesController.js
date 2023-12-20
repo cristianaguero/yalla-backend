@@ -20,9 +20,9 @@ const createCategory = async (req, res) => {
     try {
         const newCategory = await prisma.categories.create({
             data: {
-                name: label,
-                image: icon,
-                description
+                label,
+                icon,
+                description,
             }
         });
         res.json({ message: 'Category created successfully', newCategory });
@@ -48,8 +48,8 @@ const updateCategory = async (req, res) => {
     } else {
 
     try {
-        categoryExists.name = label || categoryExists.name;
-        categoryExists.image = icon || categoryExists.image;
+        categoryExists.label = label || categoryExists.label;
+        categoryExists.icon = icon || categoryExists.icon;
         categoryExists.description = description || categoryExists.description;
 
         const updatedCategory = await prisma.categories.update({
@@ -61,7 +61,7 @@ const updateCategory = async (req, res) => {
             }
         });
         
-        res.json({ message: 'Category created successfully', updatedCategory });
+        res.json({ message: 'Category updated successfully', updatedCategory });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

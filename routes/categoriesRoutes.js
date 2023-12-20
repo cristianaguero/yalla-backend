@@ -13,7 +13,6 @@ const router = Router();
 router.post("/", checkAuth, createCategory);
 router.put("/:id", checkAuth, updateCategory);
 router.delete("/:id", checkAuth, deleteCategory);
-
-router.get("/", checkAuth, getAllCategories);
+router.get("/", getAllCategories);
 
 export default router;
