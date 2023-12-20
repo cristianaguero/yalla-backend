@@ -61,7 +61,7 @@ const updateCategory = async (req, res) => {
             }
         });
         
-        res.json({ message: 'Category created successfully', updatedCategory });
+        res.json({ message: 'Category updated successfully', updatedCategory });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

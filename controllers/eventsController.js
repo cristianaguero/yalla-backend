@@ -5,8 +5,17 @@ const prisma = new PrismaClient();
 
 const createEvent = async (req, res) => {
 
-    const { title, description, startDate, endDate, location, type, capacity, languages, imageUrl, categoryId } = req.body;
+    const { title, description, startDate, endDate, location, address, capacity, languages, imageUrl, category } = req.body;
+    const foundCategory = await prisma.categories.findUnique({
+        where: {
+            label: category.label,
+        },
+    });
+    console.log('Found category:', foundCategory);
 
+    if (!foundCategory) {
+        return res.status(404).json({ error: 'Category not found' });
+    }
     
     try {
         const newEvent = await prisma.events.create({
@@ -16,13 +25,14 @@ const createEvent = async (req, res) => {
                 startDate,
                 endDate,
                 location,
-                type,
+                address,
                 capacity,
                 languages,
                 imageUrl,
-                categoryId,
+                categoryId: foundCategory.id,
             }
         });
+        console.log(req.body);
         res.json({ message: 'Event created successfully', newEvent });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -59,9 +69,13 @@ const searchEvents = async (req, res) => {
         let events;
         const where = {};
 
-        if(category) {
-            where.category = category
-        };
+        if (category) {
+            where.category = {
+                label: {
+                    equals: category,
+                },
+            };
+        }
         
         if(startDate && endDate) {
             where.startDate = {
@@ -77,10 +91,15 @@ const searchEvents = async (req, res) => {
                 contains: location,
             };
         };
-        console.log('where:', where);
+
         events = await prisma.events.findMany({
             where,
         });
+
+        if (events.length === 0) {
+            return res.status(404).json({ error: 'No events match the specified criteria.' });
+        }
+
         res.json(events);
     } catch(error) {
         res.status(400).json({error: error.message});
