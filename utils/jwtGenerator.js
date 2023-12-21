@@ -1,7 +1,13 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 const jwtGenerator = (userId) => {
-    return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "5d" });
-}
+    const payload = {
+      user: {
+        id: userId,
+      },
+    };
+  
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "2d" });
+  };
 
-export default jwtGenerator
+export default jwtGenerator;

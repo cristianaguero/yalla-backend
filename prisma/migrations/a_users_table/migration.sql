@@ -5,7 +5,7 @@ CREATE TABLE "Users" (
     "name" TEXT NOT NULL,
     "age" INTEGER,
     "password" TEXT NOT NULL,
-    "image" TEXT,
+    "imageUrl" TEXT,
     "address" TEXT,
     "city" TEXT,
     "profession" TEXT,

@@ -20,7 +20,7 @@ model Users {
   bio         String?
   age         Int?
   skills      String[]
-  image       String?
+  imageUrl    String?
   events      Events[]
   role        String   @default("user")
   token       String?
