@@ -95,7 +95,7 @@ const profile = async (req, res) => {
 }
 
 const updateProfile = async (req, res) => {
-    const { id, name, age, imageUrl, address, phone, city, profession, languages, description, skills } = req.body;
+    const { id, name, age, imageUrl, address, city, location, phone, profession, languages, bio, skills } = req.body;
 
     const user = await prisma.users.findUnique({
         where: {
@@ -109,11 +109,12 @@ const updateProfile = async (req, res) => {
         user.age = age || user.age;
         user.imageUrl = imageUrl || user.imageUrl;
         user.address = address || user.address;
-        user.phone = phone || user.phone;
         user.city = city || user.city;
+        user.location = location || user.location;
+        user.phone = phone || user.phone;
         user.profession = profession || user.profession;
         user.languages = languages || user.languages;
-        user.description = description || user.description;
+        user.bio = bio || user.bio;
         user.skills = skills || user.skills;
 
     } catch (error) {
