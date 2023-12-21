@@ -56,6 +56,7 @@ const authenticateUser = async (req, res) => {
                 email
             }
         });
+        console.log(user)
     } catch (error) {
         res.status(400).json({ error: "The credentials are not correct" });
     }
@@ -69,12 +70,12 @@ const authenticateUser = async (req, res) => {
 
     try {
         if (!passwordDecoded) {
-            res.status(400).json({ error: "The credentials are not correct" });
+            res.status(400).json({ error: "Wrong password or email" });
         } else {
             res.json({
                 id: user.id,
                 name: user.name,
-                image: user.image,
+                imageUrl: user.imageUrl,
                 role: user.role,
                 token: jwtGenerator(user.id)
             });
@@ -97,7 +98,7 @@ const profile = async (req, res) => {
 }
 
 const updateProfile = async (req, res) => {
-    const { id, name, age, image, address, phone, city, profession, languages, description, skills } = req.body;
+    const { id, name, age, imageUrl, address, phone, city, profession, languages, description, skills } = req.body;
 
     const user = await prisma.users.findUnique({
         where: {
@@ -109,7 +110,7 @@ const updateProfile = async (req, res) => {
 
         user.name = name || user.name;
         user.age = age || user.age;
-        user.image = image || user.image;
+        user.imageUrl = imageUrl || user.imageUrl;
         user.address = address || user.address;
         user.phone = phone || user.phone;
         user.city = city || user.city;
