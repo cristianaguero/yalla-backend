@@ -56,35 +56,32 @@ const authenticateUser = async (req, res) => {
                 email
             }
         });
-        console.log(user)
-    } catch (error) {
-        res.status(400).json({ error: "The credentials are not correct" });
-    }
 
-    if (!user) {
-        res.status(400).json({ error: "User not found" });
-    }
-
-    
-        const passwordDecoded = await comparePassword(user.password, password)
-
-    try {
-        if (!passwordDecoded) {
-            res.status(400).json({ error: "Wrong password or email" });
-        } else {
-            res.json({
-                id: user.id,
-                name: user.name,
-                imageUrl: user.imageUrl,
-                role: user.role,
-                token: jwtGenerator(user.id)
-            });
+        if (!user) {
+            res.status(400).json({ error: "User not found" });
+            return;
         }
+
+        const passwordDecoded = await comparePassword(user.password, password);
+
+        if (!passwordDecoded) {
+            res.status(400).json({ error: "Wrong email or password" });
+            return;
+        }
+
+        res.json({
+            id: user.id,
+            name: user.name,
+            image: user.image,
+            role: user.role,
+            token: jwtGenerator(user.id)
+        });
+
     } catch (error) {
-        res.status(400).json({ error: "The credentials are not correct" })
+        res.status(400).json({ error: "An error occured during authentification" });
         console.log(error);
     }
-}
+};
 
 const profile = async (req, res) => {
 
