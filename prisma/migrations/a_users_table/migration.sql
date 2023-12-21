@@ -8,6 +8,7 @@ CREATE TABLE "Users" (
     "image" TEXT,
     "address" TEXT,
     "city" TEXT,
+    "profession" TEXT,
     "bio" TEXT,
     "languages" TEXT[],
     "phone" TEXT,

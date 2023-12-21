@@ -6,7 +6,7 @@ import { authenticateUser, createUser, updateProfile, profile, deleteUser, getAl
 const router = Router();
 
 router.get("/", checkAuth, getAllUsers);
-router.get("/login", authenticateUser);
+router.post("/login", authenticateUser);
 router.post("/register", createUser);
 router.get("/profile", checkAuth, profile);
 router.put("/profile/:id", checkAuth, updateProfile);
