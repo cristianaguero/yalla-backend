@@ -1,9 +1,9 @@
-import pkg from '@prisma/client';
+import pkg from "@prisma/client";
 const { PrismaClient } = pkg;
-import jwtGenerator from '../utils/jwtGenerator.js';
-import idGenerator from '../utils/idGenerator.js';
-import bcrypt from 'bcrypt';
-import { comparePassword } from '../services/userService.js';
+import jwtGenerator from "../utils/jwtGenerator.js";
+import idGenerator from "../utils/idGenerator.js";
+import bcrypt from "bcrypt";
+import { comparePassword } from "../services/userService.js";
 
 const prisma = new PrismaClient();
 
@@ -26,7 +26,7 @@ const createUser = async (req, res) => {
     });
 
     if (userExists) {
-        res.status(400).json({ error: 'User already exists' });
+        res.status(400).json({ error: "User already exists" });
     } else {
 
         const salt = await bcrypt.genSalt(10);
@@ -39,7 +39,7 @@ const createUser = async (req, res) => {
                     password: await bcrypt.hash(req.body.password, salt)
                 }
             });
-            res.json({ message: 'User created successfully', newUser });
+            res.json({ message: "User created successfully", newUser });
         } catch (error) {
             res.status(400).json({ error: error.message });
         }
@@ -57,11 +57,11 @@ const authenticateUser = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(400).json({ error: 'The credentials are not correct' });
+        res.status(400).json({ error: "The credentials are not correct" });
     }
 
     if (!user) {
-        res.status(400).json({ error: 'The credentials are not correct' });
+        res.status(400).json({ error: "User not found" });
     }
 
     
@@ -69,18 +69,18 @@ const authenticateUser = async (req, res) => {
 
     try {
         if (!passwordDecoded) {
-            res.status(400).json({ error: 'The credentials are not correct' });
+            res.status(400).json({ error: "The credentials are not correct" });
         } else {
             res.json({
                 id: user.id,
                 name: user.name,
-                surname: user.surname,
+                image: user.image,
                 role: user.role,
                 token: jwtGenerator(user.id)
             });
         }
     } catch (error) {
-        res.status(400).json({ error: 'The credentials are not correct' })
+        res.status(400).json({ error: "The credentials are not correct" })
         console.log(error);
     }
 }
@@ -97,7 +97,7 @@ const profile = async (req, res) => {
 }
 
 const updateProfile = async (req, res) => {
-    const { id, name, age, image, address, phone, city, languages, description, skills } = req.body;
+    const { id, name, age, image, address, phone, city, profession, languages, description, skills } = req.body;
 
     const user = await prisma.users.findUnique({
         where: {
@@ -113,6 +113,7 @@ const updateProfile = async (req, res) => {
         user.address = address || user.address;
         user.phone = phone || user.phone;
         user.city = city || user.city;
+        user.profession = profession || user.profession;
         user.languages = languages || user.languages;
         user.description = description || user.description;
         user.skills = skills || user.skills;
@@ -130,7 +131,7 @@ const updateProfile = async (req, res) => {
         }
     });
 
-    res.json(updatedUser);
+    res.json( {message: "User updated successfully", updatedUser});
 }
 
 const deleteUser = async (req, res) => {
@@ -142,7 +143,7 @@ const deleteUser = async (req, res) => {
                 id
             }
         });
-        res.json({ message: 'User deleted successfully', deletedUser });
+        res.json({ message: "User deleted successfully", deletedUser });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
