@@ -72,7 +72,7 @@ const authenticateUser = async (req, res) => {
         res.json({
             id: user.id,
             name: user.name,
-            image: user.image,
+            imageUrl: user.imageUrl,
             role: user.role,
             token: jwtGenerator(user.id)
         });
